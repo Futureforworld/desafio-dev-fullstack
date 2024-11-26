@@ -1,7 +1,54 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 
+// Definir o tipo de dados que o backend retorna
+interface Dados {
+  nome: string;
+  valor: number;
+}
+
 export default function Home() {
+  // Estado para armazenar os dados do backend
+  const [dados, setDados] = useState<Dados[]>([]);
+  const [erro, setErro] = useState<string | null>(null);
+
+  // Efeito para buscar os dados do backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/simular");
+
+        // Verificar se a resposta do servidor foi bem-sucedida
+        if (!response.ok) {
+          throw new Error(`Erro na resposta do servidor: ${response.statusText}`);
+        }
+
+        // Tentar obter os dados como JSON
+        const data = await response.json();
+
+        // Verificar se os dados estão no formato esperado
+        if (Array.isArray(data)) {
+          const dadosValidos = data.every(
+            (item) => typeof item.nome === "string" && typeof item.valor === "number"
+          );
+          if (dadosValidos) {
+            setDados(data);
+          } else {
+            throw new Error("Dados no formato inválido.");
+          }
+        } else {
+          throw new Error("Resposta do servidor não é um array.");
+        }
+      } catch (err) {
+        // Garantir que a mensagem de erro seja uma string
+        setErro(`Erro ao buscar dados do backend: ${(err as Error).message}`);
+      }
+    };
+
+    fetchData();
+  }, []); // O array vazio garante que a requisição aconteça apenas uma vez, ao carregar a página.
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -13,6 +60,21 @@ export default function Home() {
           height={38}
           priority
         />
+        
+        {/* Exibir os dados ou o erro, se houver */}
+        {erro && <p>{erro}</p>}
+        {dados.length > 0 ? (
+          <ul>
+            {dados.map((item, index) => (
+              <li key={index}>
+                {item.nome}: {item.valor}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Carregando dados...</p>
+        )}
+
         <ol>
           <li>
             Get started by editing <code>app/page.tsx</code>.

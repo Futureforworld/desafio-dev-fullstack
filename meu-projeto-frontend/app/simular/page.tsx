@@ -1,88 +1,59 @@
-"use client";
+// page.tsx
+'use client';
 
-import React, { useState } from "react";
+import { useEffect, useState } from 'react';
 
-const Simular = () => {
-    const [formData, setFormData] = useState({
-        nomeCompleto: "",
-        email: "",
-        telefone: "",
-    });
-
-    const [responseMessage, setResponseMessage] = useState("");
-
-    // Função para capturar as mudanças nos inputs
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    // Função para enviar os dados via fetch
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch("http://localhost:3000/simular", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setResponseMessage(`Simulação registrada com sucesso: ${JSON.stringify(data)}`);
-            } else {
-                setResponseMessage("Erro ao registrar simulação.");
-            }
-        } catch (error) {
-            console.error("Erro na requisição:", error);
-            setResponseMessage("Erro na conexão com o servidor.");
-        }
-    };
-
-    return (
-        <div>
-            <h1>Simular Consumo</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Nome Completo:</label>
-                    <input
-                        type="text"
-                        name="nomeCompleto"
-                        value={formData.nomeCompleto}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <div>
-                    <label>Telefone:</label>
-                    <input
-                        type="text"
-                        name="telefone"
-                        value={formData.telefone}
-                        onChange={handleInputChange}
-                    />
-                </div>
-                <button type="submit">Enviar</button>
-            </form>
-            {responseMessage && <p>{responseMessage}</p>}
-        </div>
-    );
+type DataType = {
+  id: number;
+  name: string;
 };
 
-export default Simular;
+const SimularPage = () => {
+  const [data, setData] = useState<DataType[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL; // Variável de ambiente
+        const response = await fetch(`${backendUrl}/api/endpoint`); // Substitua /api/endpoint pelo endpoint do backend
+        if (!response.ok) {
+          throw new Error('Erro ao buscar dados do backend');
+        }
+        const result: DataType[] = await response.json();
+        setData(result);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Erro desconhecido');
+        }
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return <div>Erro: {error}</div>;
+  }
+
+  if (!data) {
+    return <div>Carregando...</div>;
+  }
+
+  return (
+    <div>
+      <h1>Simular</h1>
+      <ul>
+        {data.map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default SimularPage;
 
 

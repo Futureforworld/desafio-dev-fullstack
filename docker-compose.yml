@@ -1,7 +1,7 @@
-
 services:
   backend:
-    image: node:16
+    build:
+      context: ./backend
     container_name: simulacao-energia-backend
     working_dir: /usr/src/app
     volumes:
@@ -10,7 +10,22 @@ services:
       - "3000:3000"
     networks:
       - simulacao-net
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/simulacao_energia
+    depends_on:
+      - mongo
     command: npm start
+
+  frontend:
+    build:
+      context: ./meu-projeto-frontend
+    container_name: simulacao-energia-frontend
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./meu-projeto-frontend:/usr/src/app
+    networks:
+      - simulacao-net
 
   mongo:
     image: mongo:latest
