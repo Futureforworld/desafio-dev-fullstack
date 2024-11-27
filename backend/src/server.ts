@@ -1,11 +1,9 @@
-import app from './app'; // Importa a configuração do servidor
-import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
 
-dotenv.config(); // Carrega as variáveis de ambiente do .env
+const app = express();
 
-const PORT = process.env.PORT || 3000;
+// Usar o CORS
+app.use(cors());
 
-// Inicializa o servidor
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Outras configurações do servidor...

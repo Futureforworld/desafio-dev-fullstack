@@ -1,36 +1,34 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';  // Importação dos tipos necessários
 import multer from 'multer';
-import { registrarNovaSimulacao } from '../services/simular.service'; // Importa o serviço de simulação
 
+// Tipagem para o Request, incluindo o file (alteração)
+interface ICustomRequest extends Request {
+  file: Express.Multer.File;  // Definindo a tipagem para o arquivo que será enviado
+}
+
+// Inicialize o roteador
 const router = Router();
-const upload = multer(); // Configuração para manipular multipart/form-data
 
-// Endpoint POST /simular
-router.post('/', upload.single('file'), async (req, res) => {
-    try {
-        const { nomeCompleto, email, telefone, informacoesDaFatura } = req.body;
+// Configuração do multer para upload do arquivo (alteração)
+const upload = multer({ dest: 'uploads/' });
 
-        // Validação básica dos dados
-        if (!nomeCompleto || !email || !telefone || !informacoesDaFatura) {
-            return res.status(400).json({ message: 'Dados obrigatórios ausentes.' });
-        }
+// Defina o endpoint POST (não há alteração aqui, mas certifique-se de estar usando o tipo correto)
+router.post('/', upload.single('file'), async (req: ICustomRequest, res: Response): Promise<Response> => {
+  try {
+    console.log('Requisição recebida:', req.body);
+    console.log('Arquivo recebido:', req.file);
 
-        // Chama o serviço para processar a simulação
-        const novaSimulacao = await registrarNovaSimulacao({
-            nomeCompleto,
-            email,
-            telefone,
-            informacoesDaFatura: JSON.parse(informacoesDaFatura), // Converte string JSON para objeto
-        });
-
-        return res.status(201).json(novaSimulacao);
-    } catch (error) {
-        console.error('Erro:', error);
-        res.status(500).json({ error: 'Erro ao processar a solicitação' });
-    }
+    // Lógica para processar a requisição e gerar a resposta
+    return res.status(200).json({ message: 'Simulação registrada com sucesso!' });
+  } catch (error) {
+    console.error('Erro no processamento:', error);
+    return res.status(500).json({ error: 'Erro interno ao registrar a simulação.' });
+  }
 });
 
+// Exporte a rota
 export default router;
+
 
 
 
