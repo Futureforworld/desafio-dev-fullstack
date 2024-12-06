@@ -1,0 +1,21 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "fernando",  
+    "password": "Rock@2025",  
+    "database": "simulacao_energia",  
+    "synchronize": false,
+    "logging": true,
+    "entities": [
+      "src/entity/*.ts"
+    ],
+    "migrations": [
+      "src/migration/*.ts"
+    ],
+    "subscribers": [],
+    "cli": {
+      "migrationsDir": "src/migration"
+    }
+  }
+  

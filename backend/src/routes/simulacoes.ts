@@ -1,33 +1,26 @@
-import { Router, Request, Response } from 'express';  // Importação dos tipos necessários
-import multer from 'multer';
+import { Router } from 'express';
+import db from './db'; // Certifique-se de que a conexão está correta
 
-// Tipagem para o Request, incluindo o file (alteração)
-interface ICustomRequest extends Request {
-  file: Express.Multer.File;  // Definindo a tipagem para o arquivo que será enviado
-}
-
-// Inicialize o roteador
 const router = Router();
 
-// Configuração do multer para upload do arquivo (alteração)
-const upload = multer({ dest: 'uploads/' });
-
-// Defina o endpoint POST (não há alteração aqui, mas certifique-se de estar usando o tipo correto)
-router.post('/', upload.single('file'), async (req: ICustomRequest, res: Response): Promise<Response> => {
+router.get("/simulacoes", async (req, res) => {
   try {
-    console.log('Requisição recebida:', req.body);
-    console.log('Arquivo recebido:', req.file);
-
-    // Lógica para processar a requisição e gerar a resposta
-    return res.status(200).json({ message: 'Simulação registrada com sucesso!' });
+    const simulacoes = await db.query("SELECT * FROM simulacoes");
+    res.json(simulacoes.rows);
   } catch (error) {
-    console.error('Erro no processamento:', error);
-    return res.status(500).json({ error: 'Erro interno ao registrar a simulação.' });
+    console.error(error);
+    res.status(500).json({ error: "Erro ao buscar simulações." });
   }
 });
 
-// Exporte a rota
+router.get("/simulacao", (req, res) => {
+  res.status(200).json({ message: "Rota simulacao funcionando!" });
+});
+
 export default router;
+
+
+
 
 
 
