@@ -1,46 +1,41 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const Simular = () => {
-  const [form, setForm] = useState({
-    nomeCompleto: "",
-    email: "",
-    telefone: "",
-    arquivo: null,
+const SimulacaoForm: React.FC = () => {
+  const [formData, setFormData] = useState({
+    nomeCompleto: '',
+    email: '',
+    telefone: '',
+    contaDeEnergia: null,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setForm({ ...form, arquivo: e.target.files[0] });
-    }
+    setFormData({ ...formData, contaDeEnergia: e.target.files[0] });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("nomeCompleto", form.nomeCompleto);
-    formData.append("email", form.email);
-    formData.append("telefone", form.telefone);
-    if (form.arquivo) formData.append("file", form.arquivo);
+    const formDataToSend = new FormData();
+    formDataToSend.append('file', formData.contaDeEnergia);
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/simulacao",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      alert("Simulação registrada com sucesso!");
-      console.log("Resposta do backend:", response.data);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/simulacao`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Simulação realizada com sucesso:', response.data);
+      alert(response.data.mensagem);
     } catch (error) {
-      console.error("Erro ao registrar simulação:", error);
-      alert("Falha ao registrar simulação. Verifique os dados e tente novamente.");
+      console.error('Erro ao enviar simulação:', error);
+      alert('Erro ao enviar o arquivo. Tente novamente.');
     }
+    
   };
 
   return (
@@ -48,38 +43,34 @@ const Simular = () => {
       <input
         type="text"
         name="nomeCompleto"
-        placeholder="Nome Completo"
-        value={form.nomeCompleto}
-        onChange={handleChange}
+        placeholder="Nome completo"
+        value={formData.nomeCompleto}
+        onChange={handleInputChange}
         required
       />
       <input
         type="email"
         name="email"
         placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
+        value={formData.email}
+        onChange={handleInputChange}
         required
       />
       <input
-        type="tel"
+        type="text"
         name="telefone"
         placeholder="Telefone"
-        value={form.telefone}
-        onChange={handleChange}
+        value={formData.telefone}
+        onChange={handleInputChange}
         required
       />
-      <input
-        type="file"
-        name="arquivo"
-        onChange={handleFileChange}
-        accept="application/pdf"
-        required
-      />
-      <button type="submit">Enviar Simulação</button>
+      <input type="file" name="file" onChange={handleFileChange} required />
+      <button type="submit">Submeter</button>
     </form>
   );
 };
 
-export default Simular;
+export default SimulacaoForm;
+
+
 

@@ -1,143 +1,28 @@
-# NewSun Energy Brazil
-## Processo de recrutamento
 
-Olá dev, bem vindo ao nosso processo de recrutamento para desenvolvedor Full Stack!
+Simulação de Energia - Projeto Backend e Frontend
+Este projeto tem como objetivo a criação de um sistema de simulação de energia, onde o usuário pode enviar uma fatura de energia para realizar uma simulação, utilizando tecnologias como Node.js, Express, Axios, TypeScript, multer e React.
 
-### Sobre a vaga
-* 100% Remoto
-* Flexibilidade no horário de trabalho
+Descrição do Projeto
+O desafio consistia em criar um sistema de simulação que permitisse aos usuários enviar arquivos (como contas de energia) e, a partir disso, realizar uma simulação no backend. A proposta era simples, mas houve alguns ajustes e improvisos durante o desenvolvimento, que foram essenciais para o sucesso da implementação.
 
-### Requisitos para a vaga
-Conhecimentos sólidos em:
+Tecnologias Utilizadas
+Node.js e Express: Para a criação do servidor backend.
+multer: Middleware utilizado para o upload de arquivos.
+TypeScript: Para garantir um código mais robusto e tipado.
+Axios: Biblioteca para fazer requisições HTTP do frontend para o backend.
+React: Para o desenvolvimento do frontend, onde o formulário para enviar os dados foi criado.
+CORS: Para permitir a comunicação entre o frontend e o backend.
+O Processo
+Configuração do Backend: A primeira etapa foi configurar o servidor backend usando o Express e o TypeScript. Em seguida, configuramos o middleware multer para possibilitar o upload de arquivos PDF (como contas de energia). A escolha do multer se deu devido à sua simplicidade e por ser uma ferramenta muito eficiente para o tipo de tarefa que precisávamos realizar. O servidor foi configurado para rodar na porta 4000.
 
-* Typescript (com nodejs)
-* ReactJS/NextJS
-* Estilização com tailwindCSS ou @chakra-ui
-* MySQL (utilizando algum ORM: prisma, typeORM, etc...)
-* Consumir e Servir aplicações RESTful
+Criação das Rotas: Criamos uma rota POST em /simulacao, onde os usuários podem enviar o arquivo via formulário. O arquivo enviado é armazenado em um diretório local chamado uploads/ e o nome do arquivo é alterado para incluir a data atual, evitando conflitos.
 
-Desejável:
-* NestJS
-* Docker
-* Noções de Clean Architeture 
+Frontend: No lado do frontend, foi criado um formulário simples em React, onde o usuário preenche seu nome, email, telefone e anexa a conta de energia. Ao submeter o formulário, os dados são enviados para o servidor backend via uma requisição HTTP POST utilizando Axios. A resposta do servidor é então tratada, exibindo a mensagem de sucesso.
 
-# Resumo
-### Duas telas no frontend, uma com o formulário, outra com a listagem das simulações registradas (filtros, etc).
-### No backend, 3 endpoints: registrar uma nova simulação, consumir em lista, consumir por id.
+Desafios e Improvisos: Durante o desenvolvimento, surgiram alguns desafios que exigiram improvisos:
 
+CORS: Precisamos configurar o CORS corretamente para permitir que o frontend (executando em outra porta) fizesse requisições para o backend.
+Configuração do Upload: O diretório de upload (uploads/) não estava presente inicialmente, então criamos manualmente esse diretório para garantir que os arquivos fossem armazenados corretamente.
+Processamento do Arquivo: Embora o foco fosse a simulação, tivemos que lidar com a manipulação dos arquivos enviados, que foi uma parte crítica, já que precisávamos garantir que o arquivo fosse corretamente armazenado e processado no backend.
+Resiliência e Persistência: Em diversos momentos, o processo não foi tão simples como parecia inicialmente. Foi necessário ajustar e testar várias vezes, principalmente nas configurações do servidor, rotas e no tratamento das requisições do frontend. A persistência foi crucial para superar as dificuldades e alcançar a conclusão bem-sucedida do projeto.
 
-# O Desafio:
-Utilizando o seu smartphone ou desktop, João deve ser capaz de realizar uma simulação para um plano de compensação energética. <br/>
-O processo é simples, João submete um formulário contendo o seu nome, email e telefone, junto a **uma ou mais** contas de energia (que será decodificada por nossa API interna).<br/><br/>
-Uma vez submetido o formulário, o backend tem que ser capaz de criar um novo ```lead``` contendo as informações cadastrais do author, juntamente aos dados decodificados da conta de energia.
-#
-# Link para contas de energia [aqui](https://github.com/newsunenergy/desafio-dev-fullstack-12-2023/tree/main/contas-de-energia)
-
-> [!TIP]
-> A escolha de tecnologia é livre. O único requisito é que seja feito em Typescript e que o frontend seja feito em ReactJS ou NextJS. Pode adicionar frameworks ou bibliotecas da sua escolha!<br/>
-
->[!NOTE]
->Endpoint utilizado para decodificação da conta de energia. <br/>
->Sem autenticação, apenas realizar um POST com `multipart/form-data`<br/> o body deve ter o campo `"file"` contendo a conta de energia <br/>
->POST https://magic-pdf.solarium.newsun.energy/v1/magic-pdf <br/><br/>
->Content-Type: multipart/form-data <br />
-![image](https://github.com/newsunenergy/desafio-dev-fullstack-12-2023/assets/30875229/c2d784b6-d4f3-4009-b9c1-cbea7feac17d)
-
-
->[!CAUTION]
-> Não há necessidade de salvar o arquivo da conta de energia. Não será utilizado como critério de avaliação
-
-# Link para contas de energia [aqui](https://github.com/newsunenergy/desafio-dev-fullstack-12-2023/tree/main/contas-de-energia)
-
-### Frontend
-- [ ] Página para submissão do formulário ```/simular```
-- [ ] Página de consulta ```/listagem```
-
-### Backend
-- [ ] Endpoint para registrar uma nova simulação
-- [ ] Endpoint para listar todas as simulações (com opção de filtro por nome, email, codigo da unidade consumidora etc)
-- [ ] Endpoint para listar uma simulação baseado no id do lead, etc...
-- [ ] Modelar domínio com os agregados a seguir:
-
-### Diferencial
-- [ ] Fazer validação dos dados transitados na API.
-- [ ] Configurar ambiente docker para rodar a aplicação.
-
-
-      
-```ts
-export interface Lead {
-  id: string
-  nomeCompleto: string
-  email: string 
-  telefone: string
-  unidades: Unidade[]
-}
-
-export interface Unidade {
-  id: string
-  codigoDaUnidadeConsumidora: string
-  modeloFasico: 'monofasico' | 'bifasico' | 'trifasico'
-  enquadramento: 'AX' | 'B1' | 'B2' | 'B3'
-  historicoDeConsumoEmKWH: Consumo[]
-}
-
-export interface Consumo {
-  consumoForaPontaEmKWH: number
-  mesDoConsumo: Date
-}
-
-```
->[!NOTE]
-> DICA<br/>
-> ![image](https://github.com/newsunenergy/desafio-dev-fullstack-12-2023/assets/30875229/1601b2e4-f1b9-4b40-a2ae-020e342c7796)<br/>
-> `unit_key` representa `codigoDaUnidadeConsumidora` no nosso domínio<br/>
-> `chargingModel` representa `unit.enquadramento` no nosso domínio<br/>
-> `phaseModel` representa  `unit.modeloFasico` no nosso domínio<br/>
-> `consumo_fp` representa `unit.historicoDeConsumoEmKWH.consumoForaPontaEmKWH`<br/>
-> `consumo_date` representa `mesDoConsumo` <br/><br/>
-
-#
-
-# Regras
-* O email deverá ser único por `lead`
-* O codigoDaUnidadeConsumidora deve ser único.
-* Um lead deve ter no mínimo 1 `unidade`.
-* Uma `unidade` deve ter exatamente o `historicoDeConsumoEmKWH` do `Consumo` dos últimos 12 meses. Em outras palavras, `${unit.historicoDeConsumoEmKWH}` length tem que ser 12.
-
-```ts
-export interface SolicitarSimulacaoDeCompensacaoEnergeticaInput {
-  nomeCompleto: string
-  email: string
-  telefone: string
-  informacoesDaFatura: InformacaoDaFatura[]
-}
-
-export interface InformacaoDaFatura {
-    codigoDaUnidadeConsumidora: string
-    modeloFasico: string
-    enquadramento: string
-    mesDeReferencia: Date
-    consumoEmReais: number
-    historicoDeConsumoEmKWH: {
-      consumoForaPontaEmKWH: number
-      mesDoConsumo: Date
-    }[]
-}
-```
-
-# Resumo
-### Duas telas no frontend, uma com o formulário, outra com a listagem das simulações registradas (filtros, etc).
-### No backend, 3 endpoints: registrar uma nova simulação, consumir em lista, consumir por id.
-
-#
-
-# Comece
-O processo do desafio deve ser: <br />
-
-+ Faça o fork do desafio.
-+ Crie um PROJECT.md com a explicação de como devemos executar o projeto e com o máximo de detalhes possível do que foi feito.
-+ Após concluir faça um pull request
-
-Qualquer dúvida entre em contato por email.
-paulo.santana@newsun.energy

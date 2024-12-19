@@ -11,9 +11,13 @@ services:
     networks:
       - simulacao-net
     environment:
-      - MONGO_URL=mongodb://mongo:27017/simulacao_energia
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_NAME=simulacao_energia
     depends_on:
-      - mongo
+      - postgres
     command: npm start
 
   frontend:
@@ -27,19 +31,24 @@ services:
     networks:
       - simulacao-net
 
-  mongo:
-    image: mongo:latest
-    container_name: simulacao-energia-mongo
+  postgres:
+    image: postgres:latest
+    container_name: simulacao-energia-postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: simulacao_energia
     volumes:
-      - mongo_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - "27017:27017"
+      - "5432:5432"
     networks:
       - simulacao-net
+
+volumes:
+  postgres_data:
 
 networks:
   simulacao-net:
     driver: bridge
 
-volumes:
-  mongo_data:
