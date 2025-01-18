@@ -1,28 +1,43 @@
+# Desafio Dev Fullstack 💻🔧
 
-Simulação de Energia - Projeto Backend e Frontend
-Este projeto tem como objetivo a criação de um sistema de simulação de energia, onde o usuário pode enviar uma fatura de energia para realizar uma simulação, utilizando tecnologias como Node.js, Express, Axios, TypeScript, multer e React.
+Bem-vindo ao repositório **Desafio Dev Fullstack**! Este projeto foi criado como um desafio para desenvolvedores Fullstack, com o objetivo de aplicar conhecimentos de frontend, backend, e integração entre as camadas para criar uma aplicação funcional e escalável.
 
-Descrição do Projeto
-O desafio consistia em criar um sistema de simulação que permitisse aos usuários enviar arquivos (como contas de energia) e, a partir disso, realizar uma simulação no backend. A proposta era simples, mas houve alguns ajustes e improvisos durante o desenvolvimento, que foram essenciais para o sucesso da implementação.
+## ✨ Funcionalidades
+- **Frontend Responsivo**: Interface de usuário moderna e responsiva, desenvolvida com React ou Angular.
+- **Backend Completo**: API RESTful para gerenciamento de dados, utilizando Node.js, Express ou outra tecnologia.
+- **Banco de Dados Relacional ou Não Relacional**: Integração com bancos de dados como MySQL, PostgreSQL ou MongoDB.
+- **Autenticação e Autorização**: Implementação de login e controle de acesso, com JWT ou OAuth.
+- **Testes e Deploy**: Automatização de testes unitários e integração contínua, com deployment em servidores ou plataformas de nuvem.
 
-Tecnologias Utilizadas
-Node.js e Express: Para a criação do servidor backend.
-multer: Middleware utilizado para o upload de arquivos.
-TypeScript: Para garantir um código mais robusto e tipado.
-Axios: Biblioteca para fazer requisições HTTP do frontend para o backend.
-React: Para o desenvolvimento do frontend, onde o formulário para enviar os dados foi criado.
-CORS: Para permitir a comunicação entre o frontend e o backend.
-O Processo
-Configuração do Backend: A primeira etapa foi configurar o servidor backend usando o Express e o TypeScript. Em seguida, configuramos o middleware multer para possibilitar o upload de arquivos PDF (como contas de energia). A escolha do multer se deu devido à sua simplicidade e por ser uma ferramenta muito eficiente para o tipo de tarefa que precisávamos realizar. O servidor foi configurado para rodar na porta 4000.
+## 🚀 Tecnologias Utilizadas
+- **Frontend**: React.js, Angular, HTML5, CSS3, JavaScript.
+- **Backend**: Node.js, Express, ou outra tecnologia backend de sua escolha.
+- **Banco de Dados**: MySQL, PostgreSQL ou MongoDB.
+- **Autenticação**: JWT, OAuth.
+- **Testes**: Jest, Mocha, Chai.
+- **Deploy**: Docker, Heroku, AWS, ou outra plataforma de sua preferência.
 
-Criação das Rotas: Criamos uma rota POST em /simulacao, onde os usuários podem enviar o arquivo via formulário. O arquivo enviado é armazenado em um diretório local chamado uploads/ e o nome do arquivo é alterado para incluir a data atual, evitando conflitos.
+🌟 Sobre o Projeto
+O Desafio Dev Fullstack é uma aplicação que visa testar e demonstrar as habilidades de um desenvolvedor fullstack, englobando desde a criação de interfaces modernas e responsivas, até a implementação de APIs robustas e integrações com banco de dados. É uma excelente oportunidade de mostrar seu conhecimento sobre a construção de soluções completas.
 
-Frontend: No lado do frontend, foi criado um formulário simples em React, onde o usuário preenche seu nome, email, telefone e anexa a conta de energia. Ao submeter o formulário, os dados são enviados para o servidor backend via uma requisição HTTP POST utilizando Axios. A resposta do servidor é então tratada, exibindo a mensagem de sucesso.
+Contribuições e melhorias são bem-vindas!
 
-Desafios e Improvisos: Durante o desenvolvimento, surgiram alguns desafios que exigiram improvisos:
-
-CORS: Precisamos configurar o CORS corretamente para permitir que o frontend (executando em outra porta) fizesse requisições para o backend.
-Configuração do Upload: O diretório de upload (uploads/) não estava presente inicialmente, então criamos manualmente esse diretório para garantir que os arquivos fossem armazenados corretamente.
-Processamento do Arquivo: Embora o foco fosse a simulação, tivemos que lidar com a manipulação dos arquivos enviados, que foi uma parte crítica, já que precisávamos garantir que o arquivo fosse corretamente armazenado e processado no backend.
-Resiliência e Persistência: Em diversos momentos, o processo não foi tão simples como parecia inicialmente. Foi necessário ajustar e testar várias vezes, principalmente nas configurações do servidor, rotas e no tratamento das requisições do frontend. A persistência foi crucial para superar as dificuldades e alcançar a conclusão bem-sucedida do projeto.
-
+## 📂 Estrutura do Projeto
+```plaintext
+desafio_dev_fullstack/
+│
+├── frontend/              # Código e componentes do frontend
+│   ├── src/               # Componentes principais do projeto
+│   ├── public/            # Arquivos estáticos
+│   └── package.json       # Dependências do frontend
+│
+├── backend/               # Código do backend
+│   ├── src/               # Código principal do servidor API
+│   ├── controllers/       # Controladores para lógica de negócios
+│   ├── models/            # Modelos de banco de dados
+│   └── package.json       # Dependências do backend
+│
+├── database/              # Scripts e configuração do banco de dados
+│
+├── README.md              # Documentação do projeto
+└── requirements.txt       # Dependências e ferramentas necessárias
